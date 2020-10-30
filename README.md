@@ -25,7 +25,7 @@ With a few math tricks the gradient of this objective can be approximated, even 
 This library offers
  
 1. A plug-and-play implementation of ES for pytorch reinforcement learning agents with `torch.nn.Module` policy networks. See [examples/lunar_lander.py](examples/lunar_lander.py) 
-2. A simple and flexible interface for extending ES beyond the standard Normal distribution. Just subclass [Population](population.py)
+2. A simple and flexible interface for extending ES beyond the standard Normal distribution without having to derive any gradients by hand. Just subclass [Population](population.py)
  and implement the sampling process.    
 
 
