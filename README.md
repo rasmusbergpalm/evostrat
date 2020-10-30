@@ -14,6 +14,8 @@ for i in range(N):
 
 For a complete example that solves 'LunarLander-v2' see [examples/lunar_lander.py](examples/lunar_lander.py)
 
+![Lunar lander](media/lander.gif)
+
 ### Description
 
 Evolutionary Strategies is a powerful approach to solve reinforcement learning problems and other optimization problems where the gradients cannot be computed with backprop. 
