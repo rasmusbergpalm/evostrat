@@ -1,21 +1,24 @@
 from typing import Iterable
-
-import numpy as np
+import torch as t
 
 
 def compute_centered_ranks(x: Iterable[float]) -> Iterable[float]:
-    def compute_ranks(x):
-        """
-        Returns ranks in [0, len(x))
-        Note: This is different from scipy.stats.rankdata, which returns ranks in [1, len(x)].
-        """
-        ranks = np.empty(len(x), dtype=int)
-        ranks[x.argsort()] = np.arange(len(x))
-        return ranks
-
-    x = np.array(x)
+    """
+    Compute centered ranks, e.g. [-81.0, 11.0, -0.5] --> [-0.5, 0.5, 0.0]
+    """
+    x = t.tensor(x)
     assert x.ndim == 1
-    y = compute_ranks(x.ravel()).reshape(x.shape).astype(np.float32)
-    y /= (x.size - 1)
-    y -= .5
-    return y.tolist()
+    ranks = t.zeros((len(x),), dtype=t.long)
+    ranks[x.argsort()] = t.arange(len(x))
+    ranks = ranks.to(t.float32)
+    ranks = ranks / (len(x) - 1)
+    ranks = ranks - 0.5
+    return ranks.tolist()
+
+
+def normalize(x: Iterable[float]) -> Iterable[float]:
+    x = t.tensor(x)
+    assert x.ndim == 1
+    x -= x.mean()
+    x /= (x.std() + 1e-8)
+    return x.tolist()

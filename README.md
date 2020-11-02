@@ -1,4 +1,4 @@
-# Torch EvoStrat 
+# EvoStrat 
 A library that makes Evolutionary Strategies (ES) simple to use.
 
 ### Example
@@ -22,7 +22,7 @@ Evolutionary Strategies is a powerful approach to solve reinforcement learning p
 See ["Evolution strategies as a scalable alternative to reinforcement learning"](https://arxiv.org/abs/1703.03864) for an excellent introduction.
 
 In ES the objective is to maximize the expected fitness of a distribution of individuals. 
-With a few math tricks the gradient of this objective can be approximated, even if the fitness function itself is not differentiable, and maximized with gradient ascent. 
+With a few math tricks this objective can be maximized with gradient ascent, even if the fitness function itself is not differentiable. 
 
 This library offers
  
