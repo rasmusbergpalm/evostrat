@@ -1,10 +1,10 @@
 # EvoStrat 
 A library that makes Evolutionary Strategies (ES) simple to use.
 
-### Example
+### Pseudo-code
 
 ```python
-pop = PopulationImpl(...)
+pop = PopulationImpl(...) # See complete examples for implementations. 
 optim = torch.optim.Adam(pop.parameters()) # Use any torch.optim optimizer
 for i in range(N):
     optim.zero_grads()
