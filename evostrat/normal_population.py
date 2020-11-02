@@ -3,8 +3,7 @@ from typing import Iterable, Dict, Callable, Union
 import torch as t
 import torch.distributions as d
 
-from individual import Individual
-from population import Population
+from evostrat import Individual, Population
 
 
 class NormalPopulation(Population):

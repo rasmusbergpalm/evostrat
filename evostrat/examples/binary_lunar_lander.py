@@ -7,12 +7,15 @@ from torch import nn
 from torch.multiprocessing import Pool
 from torch.optim import Adam
 
-import util
-from individual import Individual
-from normal_population import NormalPopulation
+from evostrat import compute_centered_ranks, CategoricalPopulation, Individual
 
 
-class NormalLunarLander(Individual):
+class BinaryLunarLander(Individual):
+    """
+    A lunar lander whose weights and biases are all either -1.0 or 1.0.
+    """
+    values = t.tensor([-1.0, 1.0], dtype=t.float32)
+
     def __init__(self):
         self.net = nn.Sequential(
             nn.Linear(8, 32), nn.Tanh(),
@@ -20,8 +23,9 @@ class NormalLunarLander(Individual):
         )
 
     @staticmethod
-    def from_params(params: Dict[str, t.Tensor]) -> 'NormalLunarLander':
-        agent = NormalLunarLander()
+    def from_params(params: Dict[str, t.Tensor]) -> 'BinaryLunarLander':
+        agent = BinaryLunarLander()
+        params = {k: BinaryLunarLander.values[v] for k, v in params.items()}
         agent.net.load_state_dict(params)
         return agent
 
@@ -49,8 +53,8 @@ class NormalLunarLander(Individual):
 
 
 if __name__ == '__main__':
-    param_shapes = {k: v.shape for k, v in NormalLunarLander().get_params().items()}
-    population = NormalPopulation(param_shapes, NormalLunarLander.from_params, std=0.1)
+    param_shapes = {k: v.shape + (2,) for k, v in BinaryLunarLander().get_params().items()}
+    population = CategoricalPopulation(param_shapes, BinaryLunarLander.from_params)
 
     learning_rate = 0.1
     iterations = 1000
@@ -62,7 +66,7 @@ if __name__ == '__main__':
 
     for _ in pbar:
         optim.zero_grad()
-        raw_fit = population.fitness_grads(pop_size, pool, util.compute_centered_ranks)
+        raw_fit = population.fitness_grads(pop_size, pool, compute_centered_ranks)
         optim.step()
         pbar.set_description("fit avg: %0.3f, std: %0.3f" % (raw_fit.mean().item(), raw_fit.std().item()))
         if raw_fit.mean() > 200:

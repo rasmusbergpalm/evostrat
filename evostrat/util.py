@@ -17,6 +17,9 @@ def compute_centered_ranks(x: Iterable[float]) -> Iterable[float]:
 
 
 def normalize(x: Iterable[float]) -> Iterable[float]:
+    """
+    Normalize a list of floats to have zero mean and variance 1
+    """
     x = t.tensor(x)
     assert x.ndim == 1
     x -= x.mean()

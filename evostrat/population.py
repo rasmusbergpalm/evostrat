@@ -2,7 +2,7 @@ import torch as t
 from typing import Iterable, Callable, Tuple
 from torch.multiprocessing import Pool
 
-from individual import Individual
+from evostrat import Individual
 
 
 class Population:

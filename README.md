@@ -12,7 +12,7 @@ for i in range(N):
     optim.step()
 ```
 
-For complete examples that solves 'LunarLander-v2' see [examples/normal_lunar_lander.py](examples/normal_lunar_lander.py) and [examples/binary_lunar_lander.py](examples/binary_lunar_lander.py) 
+For complete examples that solves 'LunarLander-v2' see [examples/normal_lunar_lander.py](evostrat/examples/normal_lunar_lander.py) and [examples/binary_lunar_lander.py](evostrat/examples/binary_lunar_lander.py) 
 
 ![Lunar lander](media/lander.gif)
 
@@ -26,9 +26,9 @@ With a few math tricks this objective can be maximized with gradient ascent, eve
 
 This library offers
  
-1. A plug-and-play implementation of ES for pytorch reinforcement learning agents with `torch.nn.Module` policy networks, that nicely separates the agent and policy network from the optimization. See [examples/normal_lunar_lander.py](examples/normal_lunar_lander.py) 
-2. A simple and flexible interface for extending ES beyond the standard Normal distribution without having to derive any gradients by hand. Just subclass [Population](population.py)
- and implement the sampling process. See [categorical_population.py](categorical_population.py) and [examples/binary_lunar_lander.py](examples/binary_lunar_lander.py)  
+1. A plug-and-play implementation of ES for pytorch reinforcement learning agents with `torch.nn.Module` policy networks, that nicely separates the agent and policy network from the optimization. See [examples/normal_lunar_lander.py](evostrat/examples/normal_lunar_lander.py) 
+2. A simple and flexible interface for extending ES beyond the standard Normal distribution without having to derive any gradients by hand. Just subclass [Population](evostrat/population.py)
+ and implement the sampling process. See [categorical_population.py](evostrat/categorical_population.py) and [examples/binary_lunar_lander.py](evostrat/examples/binary_lunar_lander.py)  
 
 
      
