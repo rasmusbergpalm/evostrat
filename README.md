@@ -1,6 +1,8 @@
 # EvoStrat 
 A library that makes Evolutionary Strategies (ES) simple to use.
 
+`pip install evostrat`
+
 ### Pseudo-code
 
 ```python
