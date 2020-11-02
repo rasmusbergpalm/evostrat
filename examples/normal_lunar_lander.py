@@ -12,7 +12,7 @@ from individual import Individual
 from normal_population import NormalPopulation
 
 
-class LunarLander(Individual):
+class NormalLunarLander(Individual):
     def __init__(self):
         self.net = nn.Sequential(
             nn.Linear(8, 32), nn.Tanh(),
@@ -20,8 +20,8 @@ class LunarLander(Individual):
         )
 
     @staticmethod
-    def from_params(params: Dict[str, t.Tensor]) -> 'LunarLander':
-        agent = LunarLander()
+    def from_params(params: Dict[str, t.Tensor]) -> 'NormalLunarLander':
+        agent = NormalLunarLander()
         agent.net.load_state_dict(params)
         return agent
 
@@ -49,8 +49,8 @@ class LunarLander(Individual):
 
 
 if __name__ == '__main__':
-    param_shapes = {k: v.shape for k, v in LunarLander().get_params().items()}
-    population = NormalPopulation(param_shapes, LunarLander.from_params, std=0.1)
+    param_shapes = {k: v.shape for k, v in NormalLunarLander().get_params().items()}
+    population = NormalPopulation(param_shapes, NormalLunarLander.from_params, std=0.1)
 
     learning_rate = 0.1
     iterations = 1000
