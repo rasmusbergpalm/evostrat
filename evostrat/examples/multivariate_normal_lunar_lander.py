@@ -1,24 +1,19 @@
-import torch as t
 import tqdm as tqdm
 from torch.multiprocessing import Pool
 from torch.optim import Adam
 
-from evostrat import compute_centered_ranks, CategoricalPopulation
+from evostrat import compute_centered_ranks, MultivariateNormalPopulation
 from evostrat.examples.lunar_lander import LunarLander
 
 if __name__ == '__main__':
     """
-    Lunar landers weights and biases are all binary (-1.0 or 1.0) and drawn from learned categorical distributions. 
+    Lunar landers weights and biases are drawn from a multivariate normal distribution with learned means and a learned covariance matrix.
+    
+    This is similar to CMA-ES [1].
+    [1] - Hansen, Nikolaus, and Andreas Ostermeier. "Completely derandomized self-adaptation in evolution strategies." Evolutionary computation 9.2 (2001): 159-195.
     """
-
-    def constructor(params):
-        values = t.tensor([-1.0, 1.0], dtype=t.float32)
-        binary_params = {k: values[v] for k, v in params.items()}
-        return LunarLander.from_params(binary_params)
-
-
-    param_shapes = {k: v.shape + (2,) for k, v in LunarLander().get_params().items()}
-    population = CategoricalPopulation(param_shapes, constructor)
+    param_shapes = {k: v.shape for k, v in LunarLander().get_params().items()}
+    population = MultivariateNormalPopulation(param_shapes, LunarLander.from_params)
 
     learning_rate = 0.1
     iterations = 1000

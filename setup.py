@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='evostrat',
-    version='1.0.1',
+    version='1.1.0',
     author="Rasmus Berg Palm",
     author_email="rasmusbergpalm@gmail.com",
     description="A library that makes Evolutionary Strategies (ES) simple to use.",

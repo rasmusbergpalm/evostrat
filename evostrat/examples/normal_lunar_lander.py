@@ -1,54 +1,18 @@
-from typing import Dict
-
-import gym
-import torch as t
 import tqdm as tqdm
-from torch import nn
 from torch.multiprocessing import Pool
 from torch.optim import Adam
 
-from evostrat import compute_centered_ranks, Individual, NormalPopulation
-
-
-class NormalLunarLander(Individual):
-    def __init__(self):
-        self.net = nn.Sequential(
-            nn.Linear(8, 32), nn.Tanh(),
-            nn.Linear(32, 4), nn.Softmax(dim=0)
-        )
-
-    @staticmethod
-    def from_params(params: Dict[str, t.Tensor]) -> 'NormalLunarLander':
-        agent = NormalLunarLander()
-        agent.net.load_state_dict(params)
-        return agent
-
-    def fitness(self, render=False) -> float:
-        env = gym.make("LunarLander-v2")
-        obs = env.reset()
-        done = False
-        r_tot = 0
-        while not done:
-            action = self.action(obs)
-            obs, r, done, _ = env.step(action)
-            r_tot += r
-            if render:
-                env.render()
-
-        env.close()
-        return r_tot
-
-    def get_params(self) -> Dict[str, t.Tensor]:
-        return self.net.state_dict()
-
-    def action(self, obs):
-        with t.no_grad():
-            return t.argmax(self.net(t.tensor(obs, dtype=t.float32))).item()
-
+from evostrat import compute_centered_ranks, NormalPopulation
+from evostrat.examples.lunar_lander import LunarLander
 
 if __name__ == '__main__':
-    param_shapes = {k: v.shape for k, v in NormalLunarLander().get_params().items()}
-    population = NormalPopulation(param_shapes, NormalLunarLander.from_params, std=0.1)
+    """
+    Lunar landers weights and biases are drawn from normal distributions with learned means and fixed standard deviation 0.1. This is the approach suggested in OpenAI ES [1]    
+        
+    [1] - Salimans, Tim, et al. "Evolution strategies as a scalable alternative to reinforcement learning." arXiv preprint arXiv:1703.03864 (2017).    
+    """
+    param_shapes = {k: v.shape for k, v in LunarLander().get_params().items()}
+    population = NormalPopulation(param_shapes, LunarLander.from_params, std=0.1)
 
     learning_rate = 0.1
     iterations = 1000
