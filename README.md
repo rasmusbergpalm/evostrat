@@ -39,7 +39,20 @@ This library offers
     3. [Categorical](evostrat/categorical_population.py). For agents with categorical parameters, demonstrating the ability to handle non-normal distributions. See the [examples/binary_lunar_lander.py](evostrat/examples/binary_lunar_lander.py). 
 4. A simple interface for creating your own populations, without having to derive any gradients! Just subclass [Population](evostrat/population.py) and implement the sampling process. See the built in populations for inspiration.
 
+### Attribution
 
+If you use this software in your academic work please cite
+
+``` 
+@misc{palm2020,
+  author = {Palm, Rasmus Berg},
+  title = {EvoStrat},
+  year = {2020},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/rasmusbergpalm/evostrat}}
+}
+```
      
 
 
