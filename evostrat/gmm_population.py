@@ -6,12 +6,33 @@ import torch.distributions as d
 
 
 class GaussianMixturePopulation(Population):
+    """
+    A distribution over individuals whose parameters are sampled from a Gaussian Mixture Model.
+    """
+
     def __init__(self,
                  mixing_shapes: Dict[str, t.Size],
                  component_shapes: t.Size,
                  individual_constructor: Callable[[Dict[str, t.Tensor]], Individual],
                  std: float,
                  ):
+        """
+        A distribution over individuals whose parameters are sampled from a Gaussian Mixture Model.
+
+        The shape of the parameters that individual_constructor is called with is mixing_shapes.shape + component_shapes[1:]
+
+        Examples:
+            A (3, 5) mixing shape and a (7,) component shape will result in the constructor being called with (3, 5) independent samples from a mixture of 7 (1-D) Gaussian distributions.
+            A (4, 6) mixing shape and a (7, 2) component shape will result in the constructor being called with a (4, 6, 2) tensor corresponding to (4, 6) independent samples from a mixture of 7 2-D Gaussian distributions.
+
+        :param mixing_shapes: The shapes of the parameters that are sampled from a Mixture of Gaussians.
+        :param component_shapes: The shapes of the Gaussian components. The first dimension is the number of components. Remaining dimensions are the shape of the Gaussian distributions.
+        Examples:
+            - t.Size((7,)) means the parameters will be a mixture of 7 (1-D) Gaussian distributions.
+            - t.Size((7, 2)) means the parameters will be a mixture of 7 2-D Gaussian distributions.
+        :param individual_constructor: A function that constructs an individual from parameters with shapes mixing_shapes.shape + component_shapes[1:]
+        :param std: The fixed std deviation of all the Gaussians
+        """
         self.mixing_logits = {k: t.zeros(shape + (component_shapes[0],), requires_grad=True) for k, shape in mixing_shapes.items()}
         self.component_means = t.randn(component_shapes, requires_grad=True)
         self.std = std
