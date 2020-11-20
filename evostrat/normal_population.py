@@ -15,7 +15,8 @@ class NormalPopulation(Population):
                  individual_parameter_shapes: Dict[str, t.Size],
                  individual_constructor: Callable[[Dict[str, t.Tensor]], Individual],
                  std: Union[float, str],
-                 mirror_sampling: bool = True
+                 mirror_sampling: bool = True,
+                 device='cpu'
                  ):
         """
         A distribution over individuals whose parameters are sampled from normal distributions
@@ -36,17 +37,17 @@ class NormalPopulation(Population):
         assert type(std) in {float, str}, "std must be a float or str"
         if type(std) == float:
             assert std > 0.0, "std must be greater than 0"
-            self.param_logstds = {k: t.log(t.scalar_tensor(std)) for k in individual_parameter_shapes.keys()}
+            self.param_logstds = {k: t.log(t.scalar_tensor(std, device=device)) for k in individual_parameter_shapes.keys()}
         if type(std) == str:
             assert std in {'shared', 'diagonal'}, "std must be 'shared' or 'diagonal'"
             if std == 'shared':
-                self.shared_log_std = t.scalar_tensor(0.0, requires_grad=True)
+                self.shared_log_std = t.scalar_tensor(0.0, requires_grad=True, device=device)
                 self.param_logstds = {k: self.shared_log_std for k in individual_parameter_shapes.keys()}
             else:
-                self.param_logstds = {k: t.zeros(shape, requires_grad=True) for k, shape in individual_parameter_shapes.items()}
+                self.param_logstds = {k: t.zeros(shape, requires_grad=True, device=device) for k, shape in individual_parameter_shapes.items()}
 
         self.std = std
-        self.param_means = {k: t.zeros(shape, requires_grad=True) for k, shape in individual_parameter_shapes.items()}
+        self.param_means = {k: t.zeros(shape, requires_grad=True, device=device) for k, shape in individual_parameter_shapes.items()}
         self.constructor = individual_constructor
         self.mirror_sampling = mirror_sampling
 
@@ -80,3 +81,4 @@ class NormalPopulation(Population):
                 ))
 
         return samples
+

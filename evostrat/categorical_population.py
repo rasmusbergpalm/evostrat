@@ -13,7 +13,8 @@ class CategoricalPopulation(Population):
 
     def __init__(self,
                  individual_parameter_shapes: Dict[str, t.Size],
-                 individual_constructor: Callable[[Dict[str, t.Tensor]], Individual]
+                 individual_constructor: Callable[[Dict[str, t.Tensor]], Individual],
+                 device="cpu"
                  ):
         """
         A distribution over individuals whose parameters are sampled from categorical distributions
@@ -23,7 +24,7 @@ class CategoricalPopulation(Population):
         :param individual_parameter_shapes: The shapes of the parameters of an individual. The last dimension denotes the number of classes of the categorical distribution.
         :param individual_constructor: A function that constructs an individual from parameters (with shapes equal to individual_parameter_shapes).
         """
-        self.logits = {k: t.zeros(shape, requires_grad=True) for k, shape in individual_parameter_shapes.items()}
+        self.logits = {k: t.zeros(shape, requires_grad=True, device=device) for k, shape in individual_parameter_shapes.items()}
         self.constructor = individual_constructor
 
     def parameters(self) -> Iterable[t.Tensor]:

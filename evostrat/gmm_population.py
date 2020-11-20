@@ -15,6 +15,7 @@ class GaussianMixturePopulation(Population):
                  component_shapes: t.Size,
                  individual_constructor: Callable[[Dict[str, t.Tensor]], Individual],
                  std: float,
+                 device="cpu"
                  ):
         """
         A distribution over individuals whose parameters are sampled from a Gaussian Mixture Model.
@@ -33,8 +34,8 @@ class GaussianMixturePopulation(Population):
         :param individual_constructor: A function that constructs an individual from parameters with shapes mixing_shapes.shape + component_shapes[1:]
         :param std: The fixed std deviation of all the Gaussians
         """
-        self.mixing_logits = {k: t.zeros(shape + (component_shapes[0],), requires_grad=True) for k, shape in mixing_shapes.items()}
-        self.component_means = t.randn(component_shapes, requires_grad=True)
+        self.mixing_logits = {k: t.zeros(shape + (component_shapes[0],), requires_grad=True, device=device) for k, shape in mixing_shapes.items()}
+        self.component_means = t.randn(component_shapes, requires_grad=True, device=device)
         self.std = std
         self.constructor = individual_constructor
 
