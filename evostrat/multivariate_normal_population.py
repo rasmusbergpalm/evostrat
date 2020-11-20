@@ -24,7 +24,7 @@ class MultivariateNormalPopulation(Population):
         """
         n_params = sum([s.numel() for s in individual_parameter_shapes.values()])
         self.means = t.zeros((n_params,), dtype=t.float32, requires_grad=True, device=device)
-        self.log_stds = (-6 * t.ones((n_params, n_params)) + 6 * t.eye(n_params, n_params)).clone().detach().requires_grad_(True).to(device)
+        self.log_stds = (-6 * t.ones((n_params, n_params)) + 6 * t.eye(n_params, n_params)).clone().detach().to(device).requires_grad_(True)
         self.shapes = individual_parameter_shapes
         self.constructor = individual_constructor
 
