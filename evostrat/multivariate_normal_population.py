@@ -13,7 +13,8 @@ class MultivariateNormalPopulation(Population):
 
     def __init__(self,
                  individual_parameter_shapes: Dict[str, t.Size],
-                 individual_constructor: Callable[[Dict[str, t.Tensor]], Individual]
+                 individual_constructor: Callable[[Dict[str, t.Tensor]], Individual],
+                 device="cpu"
                  ):
         """
         A distribution over individuals whose parameters are sampled from a multivariate normal with a full covariance matrix.
@@ -22,8 +23,8 @@ class MultivariateNormalPopulation(Population):
         :param individual_constructor: Constructs individuals from parameters
         """
         n_params = sum([s.numel() for s in individual_parameter_shapes.values()])
-        self.means = t.zeros((n_params,), dtype=t.float32, requires_grad=True)
-        self.log_stds = (-6 * t.ones((n_params, n_params)) + 6 * t.eye(n_params, n_params)).clone().detach().requires_grad_(True)
+        self.means = t.zeros((n_params,), dtype=t.float32, requires_grad=True, device=device)
+        self.log_stds = (-6 * t.ones((n_params, n_params)) + 6 * t.eye(n_params, n_params)).clone().detach().to(device).requires_grad_(True)
         self.shapes = individual_parameter_shapes
         self.constructor = individual_constructor
 
