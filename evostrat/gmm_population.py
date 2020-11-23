@@ -43,8 +43,6 @@ class GaussianMixturePopulation(Population):
         return list(self.mixing_logits.values()) + [self.component_means]
 
     def sample(self, n) -> Iterable[Tuple[Individual, t.Tensor]]:
-        samples = []
-
         components = d.Normal(loc=self.component_means, scale=self.std)
         for i in range(n):
             log_p = 0.0
@@ -58,6 +56,4 @@ class GaussianMixturePopulation(Population):
                 params[k] = sample
                 log_p += gmm.log_prob(sample).sum()
 
-            samples.append((self.constructor(params), log_p))
-
-        return samples
+            yield self.constructor(params), log_p

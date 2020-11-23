@@ -40,10 +40,9 @@ class MultivariateNormalPopulation(Population):
         return [self.means, self.log_stds]
 
     def sample(self, n) -> Iterable[Tuple[Individual, t.Tensor]]:
-        dist = d.MultivariateNormal(loc=self.means, scale_tril=t.exp(self.log_stds).tril())
-        with t.no_grad():
-            samples = dist.sample((n,))
-        log_probs = dist.log_prob(samples)
-        individuals = [self.constructor(self._to_shapes(s)) for s in samples]
-
-        return zip(individuals, log_probs.unbind(0))
+        for _ in range(n):
+            dist = d.MultivariateNormal(loc=self.means, scale_tril=t.exp(self.log_stds).tril())
+            with t.no_grad():
+                sample = dist.sample()
+            log_prob = dist.log_prob(sample)
+            yield self.constructor(self._to_shapes(sample)), log_prob

@@ -67,18 +67,15 @@ class NormalPopulation(Population):
         assert not self.mirror_sampling or n % 2 == 0, "if mirror_sampling is true, n must be an even number"
 
         n_samples = n // 2 if self.mirror_sampling else n
-        samples = []
+
         for _ in range(n_samples):
             noise = {k: d.Normal(loc=t.zeros_like(v), scale=t.exp(self.param_logstds[k])).sample() for k, v in self.param_means.items()}
-            samples.append((
+            yield (
                 self.constructor({k: self.param_means[k] + n for k, n in noise.items()}),
                 sum([d.Normal(self.param_means[k], scale=t.exp(self.param_logstds[k])).log_prob((self.param_means[k] + n).detach()).sum() for k, n in noise.items()])
-            ))
+            )
             if self.mirror_sampling:
-                samples.append((
+                yield (
                     self.constructor({k: self.param_means[k] - n for k, n in noise.items()}),
                     sum([d.Normal(self.param_means[k], scale=t.exp(self.param_logstds[k])).log_prob((self.param_means[k] - n).detach()).sum() for k, n in noise.items()])
-                ))
-
-        return samples
-
+                )
