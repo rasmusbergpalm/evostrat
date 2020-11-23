@@ -31,13 +31,10 @@ class CategoricalPopulation(Population):
         return self.logits.values()
 
     def sample(self, n) -> Iterable[Individual]:
-        samples = []
         for _ in range(n):
             classes = {k: d.Categorical(logits=logits).sample().detach() for k, logits in self.logits.items()}
 
-            samples.append((
+            yield (
                 self.constructor(classes),
                 sum([d.Categorical(logits=logits).log_prob(classes[k]).sum() for k, logits in self.logits.items()])
-            ))
-
-        return samples
+            )
