@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='evostrat',
-    version='1.4.0',
+    version='1.4.1',
     author="Rasmus Berg Palm",
     author_email="rasmusbergpalm@gmail.com",
     description="A library that makes Evolutionary Strategies (ES) simple to use.",
@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/rasmusbergpalm/evostrat",
     packages=setuptools.find_packages(),
     install_requires=[
-        "torch>=1.6.0"
+        "torch>=1.7.0"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -6,6 +6,6 @@ gym==0.17.3
 numpy==1.19.3
 pyglet==1.5.0
 scipy==1.5.3
-torch==1.7.0
+torch>=1.7.0
 tqdm==4.51.0
 typing-extensions==3.7.4.3

@@ -7,6 +7,7 @@ from evostrat.gmm_population import GaussianMixturePopulation
 class TestGMMPopulation(unittest.TestCase):
 
     def test_gmm(self):
+        t.distributions.Distribution.set_default_validate_args(False)
         gmp = GaussianMixturePopulation({'a': t.Size((30, 50))}, t.Size((7,)), lambda x: x, 0.0)
 
         inds, logps = zip(*gmp.sample(9))
@@ -21,12 +22,14 @@ class TestGMMPopulation(unittest.TestCase):
             self.assertIsNotNone(_logp.grad_fn)
 
     def test_gmm_1d_normals(self):
+        t.distributions.Distribution.set_default_validate_args(False)
         gmp = GaussianMixturePopulation({'a': t.Size((30, 50))}, t.Size((7,)), lambda x: x, 0.0)
         inds, logps = zip(*gmp.sample(9))
 
         self.assertEqual(len(t.unique(inds[0]['a'])), 7)
 
     def test_gmm_2d_normals(self):
+        t.distributions.Distribution.set_default_validate_args(False)
         gmp = GaussianMixturePopulation({'a': t.Size((30, 50))}, t.Size((7, 2)), lambda x: x, 0.0)
 
         inds, logps = zip(*gmp.sample(9))
