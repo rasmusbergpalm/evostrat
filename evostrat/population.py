@@ -59,7 +59,7 @@ class Population:
         for individual, log_prob in samples:  # Compute gradients one at a time so only one log prob computational graph needs to be kept in memory at a time.
             assert log_prob.ndim == 0 and log_prob.isfinite() and log_prob.grad_fn is not None, "log_probs must be differentiable finite scalars"
             individuals.append(individual)
-            grads.append(t.autograd.grad(log_prob, self.parameters()))
+            grads.append([g.cpu() for g in t.autograd.grad(log_prob, self.parameters())])
 
         if pool is not None:
             raw_fitness = pool.map(_fitness_fn_no_grad, individuals)
@@ -69,7 +69,7 @@ class Population:
         fitness = fitness_shaping_fn(raw_fitness)
 
         for i, p in enumerate(self.parameters()):
-            p.grad = -t.mean(t.stack([ind_fitness * grad[i] for grad, ind_fitness in zip(grads, fitness)]), dim=0)
+            p.grad = -t.mean(t.stack([ind_fitness * grad[i] for grad, ind_fitness in zip(grads, fitness)]), dim=0).to(p.device)
 
         return t.tensor(raw_fitness)
 
